@@ -1,5 +1,5 @@
 {
-  "total": 2,
+  "total": 7,
   "categories": {
     "linux": {
       "count": 1,
@@ -8,7 +8,7 @@
       "color": "#FCC419"
     },
     "docker": {
-      "count": 0,
+      "count": 5,
       "label": "Docker 容器",
       "icon": "🐳",
       "color": "#1C7ED6"
@@ -39,6 +39,71 @@
     }
   },
   "items": [
+    {
+      "id": "docker-005",
+      "title": "Docker 数据卷与绑定挂载详解",
+      "category": "docker",
+      "subCategory": "数据管理",
+      "difficulty": 2,
+      "date": "2026-03-03",
+      "tags": ["docker", "volume", "bind-mount", "数据持久化"],
+      "preview": "Volume 和 Bind Mount 有什么区别？开发和生产环境该如何选择？4个实战案例详解。",
+      "file": "categories/docker/qa-005.md",
+      "views": 0,
+      "timestamp": 1709467200000
+    },
+    {
+      "id": "docker-004",
+      "title": "Docker exec 中 sh -c 的用法详解",
+      "category": "docker",
+      "subCategory": "命令详解",
+      "difficulty": 2,
+      "date": "2026-03-03",
+      "tags": ["docker", "exec", "sh", "shell"],
+      "preview": "docker exec 中的 sh -c 是什么意思？为什么需要使用它？重定向和管道如何正确使用？",
+      "file": "categories/docker/qa-004.md",
+      "views": 0,
+      "timestamp": 1709467200000
+    },
+    {
+      "id": "docker-003",
+      "title": "Docker 容器修改挂载配置的方法",
+      "category": "docker",
+      "subCategory": "配置管理",
+      "difficulty": 3,
+      "date": "2026-03-03",
+      "tags": ["docker", "mounts", "volume", "配置"],
+      "preview": "已运行的 Docker 容器如何修改挂载配置？6 种方案详解及注意事项。",
+      "file": "categories/docker/qa-003.md",
+      "views": 0,
+      "timestamp": 1709467200000
+    },
+    {
+      "id": "docker-002",
+      "title": "Docker inspect 命令与容器挂载信息查看",
+      "category": "docker",
+      "subCategory": "命令详解",
+      "difficulty": 2,
+      "date": "2026-03-03",
+      "tags": ["docker", "inspect", "mounts", "grep"],
+      "preview": "如何使用 docker inspect 查看容器的详细配置？grep Mounts -A 10 是什么意思？",
+      "file": "categories/docker/qa-002.md",
+      "views": 0,
+      "timestamp": 1709467200000
+    },
+    {
+      "id": "docker-001",
+      "title": "Docker 容器与镜像的区别及启动方式",
+      "category": "docker",
+      "subCategory": "基础概念",
+      "difficulty": 1,
+      "date": "2026-03-03",
+      "tags": ["docker", "container", "image"],
+      "preview": "运行 docker run 时报错找不到镜像，但容器已存在。如何区分 Docker 的镜像和容器？",
+      "file": "categories/docker/qa-001.md",
+      "views": 0,
+      "timestamp": 1709467200000
+    },
     {
       "id": "linux-001",
       "title": "Ubuntu 登录信息解读",

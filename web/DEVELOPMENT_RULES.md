@@ -28,3 +28,91 @@
 
 ---
 *保持项目的高级感，源于对约束的坚持。* 🌸🚀
+
+
+## 📝 Markdown 渲染规范
+
+### 1. 表格渲染问题
+**问题:** `marked` v17 默认支持 GFM 表格，但 CSS 样式可能被覆盖导致表格无边框。
+
+**解决方案:** 在渲染 Markdown 后，使用 JavaScript 直接为表格元素添加内联样式：
+
+```javascript
+// 渲染 Markdown
+renderedContent.value = marked(mdContent)
+
+// 修复表格样式 - 使用内联样式确保显示
+const tempDiv = document.createElement('div')
+tempDiv.innerHTML = renderedContent.value
+
+const tables = tempDiv.querySelectorAll('table')
+tables.forEach(table => {
+  table.style.cssText = 'width: 100%; border-collapse: collapse; margin: 1.5rem 0; border: 2px solid #e2e8f0; background: white; display: table;'
+  
+  const ths = table.querySelectorAll('th')
+  ths.forEach(th => {
+    th.style.cssText = 'border: 1px solid #cbd5e1; padding: 0.8rem 1rem; text-align: left; display: table-cell; background: linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(79, 70, 229, 0.1)); color: #f472b6; font-weight: 700;'
+  })
+  
+  const tds = table.querySelectorAll('td')
+  tds.forEach(td => {
+    td.style.cssText = 'border: 1px solid #cbd5e1; padding: 0.8rem 1rem; text-align: left; display: table-cell; background: white;'
+  })
+})
+
+renderedContent.value = tempDiv.innerHTML
+```
+
+**原因:** CSS 选择器优先级不足，或被全局样式覆盖。内联样式优先级最高，确保表格正常显示。
+
+### 2. 代码高亮配置
+**依赖:** `marked` + `highlight.js`
+
+**配置方式:**
+```javascript
+import { marked } from 'marked'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github-dark.css'
+
+// 配置 marked
+marked.use({
+  gfm: true,
+  breaks: true,
+  renderer: {
+    code(token) {
+      const code = token.text
+      const language = token.lang
+      
+      if (language && hljs.getLanguage(language)) {
+        const highlighted = hljs.highlight(code, { language }).value
+        return `<pre><code class="hljs language-${language}">${highlighted}</code></pre>`
+      }
+      const highlighted = hljs.highlightAuto(code).value
+      return `<pre><code class="hljs">${highlighted}</code></pre>`
+    }
+  }
+})
+```
+
+**注意事项:**
+- `marked` v17 的 `code` renderer 接收 `token` 对象，不是字符串参数
+- `token.text` 是代码内容，`token.lang` 是语言标识
+- 必须先检查语言是否被 highlight.js 支持
+
+### 3. Markdown 表格语法
+**正确格式:**
+```markdown
+| 列1 | 列2 | 列3 |
+|-----|-----|-----|
+| 值1 | 值2 | 值3 |
+```
+
+**注意:**
+- 表格中的管道符 `|` 在代码块（反引号）内不需要转义
+- 分隔行必须至少有 3 个连字符 `---`
+- 列对齐：`:---` 左对齐，`:---:` 居中，`---:` 右对齐
+
+### 4. 常见问题排查
+1. **表格不显示:** 检查是否有内联样式，使用浏览器开发者工具查看 `display` 属性
+2. **代码无高亮:** 检查 `highlight.js` 样式是否正确导入
+3. **表格语法错误:** 确保分隔行格式正确，列数一致

@@ -105,16 +105,23 @@ export default {
     const qaItem = ref(null)
     const renderedContent = ref('')
 
-    // 配置 marked
-    marked.setOptions({
-      highlight: function(code, lang) {
-        if (lang && hljs.getLanguage(lang)) {
-          return hljs.highlight(code, { language: lang }).value
-        }
-        return hljs.highlightAuto(code).value
-      },
+    // 配置 marked - 添加代码高亮
+    marked.use({
+      gfm: true,
       breaks: true,
-      gfm: true
+      renderer: {
+        code(token) {
+          const code = token.text
+          const language = token.lang
+          
+          if (language && hljs.getLanguage(language)) {
+            const highlighted = hljs.highlight(code, { language }).value
+            return `<pre><code class="hljs language-${language}">${highlighted}</code></pre>`
+          }
+          const highlighted = hljs.highlightAuto(code).value
+          return `<pre><code class="hljs">${highlighted}</code></pre>`
+        }
+      }
     })
 
     // 获取当前问答的索引
@@ -162,12 +169,31 @@ export default {
         } else if (item.file === 'categories/general/qa-001.md') {
           const mdModule = await import('./data/qa/categories/general/qa-001.md?raw')
           mdContent = mdModule.default
+        } else if (item.file === 'categories/docker/qa-001.md') {
+          const mdModule = await import('./data/qa/categories/docker/qa-001.md?raw')
+          mdContent = mdModule.default
+        } else if (item.file === 'categories/docker/qa-002.md') {
+          const mdModule = await import('./data/qa/categories/docker/qa-002.md?raw')
+          mdContent = mdModule.default
+        } else if (item.file === 'categories/docker/qa-003.md') {
+          const mdModule = await import('./data/qa/categories/docker/qa-003.md?raw')
+          mdContent = mdModule.default
+        } else if (item.file === 'categories/docker/qa-004.md') {
+          const mdModule = await import('./data/qa/categories/docker/qa-004.md?raw')
+          mdContent = mdModule.default
+        } else if (item.file === 'categories/docker/qa-005.md') {
+          const mdModule = await import('./data/qa/categories/docker/qa-005.md?raw')
+          mdContent = mdModule.default
         } else {
           throw new Error('文件路径不存在')
         }
 
-        // 渲染 Markdown
-        renderedContent.value = marked(mdContent)
+        // 渲染 Markdown - 确保 mdContent 是字符串
+        if (typeof mdContent === 'string') {
+          renderedContent.value = marked(mdContent)
+        } else {
+          throw new Error('Markdown content is not a string')
+        }
 
         // 移除 Markdown 内容中的第一个 h1 标题（避免重复显示）
         const tempDiv = document.createElement('div')
@@ -176,6 +202,23 @@ export default {
         if (firstH1) {
           firstH1.remove()
         }
+        
+        // 修复表格样式 - 使用内联样式确保显示
+        const tables = tempDiv.querySelectorAll('table')
+        tables.forEach(table => {
+          table.style.cssText = 'width: 100%; border-collapse: collapse; margin: 1.5rem 0; border: 2px solid #e2e8f0; background: white; display: table;'
+          
+          const ths = table.querySelectorAll('th')
+          ths.forEach(th => {
+            th.style.cssText = 'border: 1px solid #cbd5e1; padding: 0.8rem 1rem; text-align: left; display: table-cell; background: linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(79, 70, 229, 0.1)); color: #f472b6; font-weight: 700;'
+          })
+          
+          const tds = table.querySelectorAll('td')
+          tds.forEach(td => {
+            td.style.cssText = 'border: 1px solid #cbd5e1; padding: 0.8rem 1rem; text-align: left; display: table-cell; background: white;'
+          })
+        })
+        
         renderedContent.value = tempDiv.innerHTML
 
       } catch (err) {
@@ -459,30 +502,55 @@ export default {
   border: none;
 }
 
-.markdown-body table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1.5rem 0;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #e2e8f0;
+/* Markdown 表格样式 - 最高优先级 */
+.qa-detail-page .qa-detail .markdown-body table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 1.5rem 0 !important;
+  border: 2px solid #e2e8f0 !important;
+  background: white !important;
+  display: table !important;
 }
 
-.markdown-body th,
-.markdown-body td {
-  border: 1px solid #e2e8f0;
-  padding: 0.8rem 1rem;
-  text-align: left;
+.qa-detail-page .qa-detail .markdown-body thead {
+  display: table-header-group !important;
 }
 
-.markdown-body th {
-  background: linear-gradient(135deg, var(--color-primary-1), var(--color-secondary-1));
-  color: var(--color-primary);
-  font-weight: 700;
+.qa-detail-page .qa-detail .markdown-body tbody {
+  display: table-row-group !important;
 }
 
-.markdown-body tr:hover {
-  background: #f8fafc;
+.qa-detail-page .qa-detail .markdown-body tr {
+  display: table-row !important;
+}
+
+.qa-detail-page .qa-detail .markdown-body th,
+.qa-detail-page .qa-detail .markdown-body td {
+  border: 1px solid #cbd5e1 !important;
+  padding: 0.8rem 1rem !important;
+  text-align: left !important;
+  display: table-cell !important;
+  vertical-align: top !important;
+  background: white !important;
+}
+
+.qa-detail-page .qa-detail .markdown-body th {
+  background: linear-gradient(135deg, var(--color-primary-1), var(--color-secondary-1)) !important;
+  color: var(--color-primary) !important;
+  font-weight: 700 !important;
+  border-bottom: 2px solid var(--color-primary-2) !important;
+}
+
+.qa-detail-page .qa-detail .markdown-body tbody tr:hover {
+  background: #f8fafc !important;
+}
+
+.qa-detail-page .qa-detail .markdown-body tbody tr:hover td {
+  background: #f8fafc !important;
+}
+
+.qa-detail-page .qa-detail .markdown-body tbody tr {
+  border-bottom: 1px solid #e2e8f0 !important;
 }
 
 .markdown-body ul,
