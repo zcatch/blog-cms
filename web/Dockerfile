@@ -13,8 +13,8 @@ RUN npm install
 # 复制项目文件
 COPY . .
 
-# 构建生产版本
-RUN npm run build
+# 构建生产版本（--outDir dist 覆盖 vite.config.js 里的自定义路径）
+RUN npm run build -- --outDir dist
 
 # 阶段 2: 使用 Nginx 运行
 FROM nginx:alpine
