@@ -184,6 +184,9 @@ export default {
         } else if (item.file === 'categories/docker/qa-005.md') {
           const mdModule = await import('./data/qa/categories/docker/qa-005.md?raw')
           mdContent = mdModule.default
+        } else if (item.file === 'categories/docker/qa-006.md') {
+          const mdModule = await import('./data/qa/categories/docker/qa-006.md?raw')
+          mdContent = mdModule.default
         } else {
           throw new Error('文件路径不存在')
         }

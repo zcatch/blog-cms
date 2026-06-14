@@ -1,5 +1,5 @@
 {
-  "total": 7,
+  "total": 8,
   "categories": {
     "linux": {
       "count": 1,
@@ -8,7 +8,7 @@
       "color": "#FCC419"
     },
     "docker": {
-      "count": 5,
+      "count": 6,
       "label": "Docker 容器",
       "icon": "🐳",
       "color": "#1C7ED6"
@@ -39,6 +39,19 @@
     }
   },
   "items": [
+    {
+      "id": "docker-006",
+      "title": "Docker + Nginx 多项目部署方案（使用挂载）",
+      "category": "docker",
+      "subCategory": "实战部署",
+      "difficulty": 2,
+      "date": "2026-03-05",
+      "tags": ["docker", "nginx", "bind-mount", "多项目", "部署"],
+      "preview": "如何使用一个 Nginx 容器管理多个前端项目？通过 Bind Mount 实现代码实时更新，域名区分不同项目。",
+      "file": "categories/docker/qa-006.md",
+      "views": 0,
+      "timestamp": 1709640000000
+    },
     {
       "id": "docker-005",
       "title": "Docker 数据卷与绑定挂载详解",

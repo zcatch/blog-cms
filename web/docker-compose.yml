@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # 方式一：使用 Bind Mount（开发环境推荐）
+  web-dev:
+    image: nginx:alpine
+    container_name: vue-learning-app-dev
+    ports:
+      - "8080:80"
+    volumes:
+      - ./dist:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+    networks:
+      - app-network
+    profiles:
+      - dev
+
+  # 方式二：使用 Named Volume（生产环境推荐）
+  web-prod:
+    image: nginx:alpine
+    container_name: vue-learning-app-prod
+    ports:
+      - "8080:80"
+    volumes:
+      - vue-app-html:/usr/share/nginx/html:ro
+      - vue-app-config:/etc/nginx/conf.d:ro
+    restart: unless-stopped
+    networks:
+      - app-network
+    profiles:
+      - prod
+
+  # 方式三：构建自定义镜像（最佳实践）
+  web-build:
+    build: .
+    container_name: vue-learning-app-build
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - app-network
+    profiles:
+      - build
+
+volumes:
+  vue-app-html:
+    name: vue-app-html
+  vue-app-config:
+    name: vue-app-config
+
+networks:
+  app-network:
+    driver: bridge

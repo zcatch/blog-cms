@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  # 方案一：一个 Nginx 容器服务多个项目
+  nginx-multi:
+    image: nginx:alpine
+    container_name: nginx-multi-projects
